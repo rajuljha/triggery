@@ -19,10 +19,11 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from core.views import EventLogViewSet
+from core.views import EventLogViewSet, TriggerViewSet
 
 
 router = routers.DefaultRouter()
+router.register(r'triggers', TriggerViewSet, basename='triggers')
 router.register(r'events', EventLogViewSet)
 
 
