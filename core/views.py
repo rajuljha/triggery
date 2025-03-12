@@ -1,10 +1,10 @@
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 
 from core.models import EventLog, Trigger, TriggerType
-from core.serializers import EventLogSerializer, TriggerSerializer
+from core.serializers import EventLogSerializer, TriggerSerializer, TriggerListSerializer
 
 
 class EventLogViewSet(viewsets.ModelViewSet):
@@ -16,8 +16,12 @@ class EventLogViewSet(viewsets.ModelViewSet):
 
 class TriggerViewSet(viewsets.ModelViewSet):
     queryset = Trigger.objects.all().order_by('-id')
-    serializer_class = TriggerSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == "trigger":
+            return TriggerSerializer
+        return TriggerListSerializer
 
     def create(self, request):
         if request.data.get("name") is None:
@@ -31,5 +35,10 @@ class TriggerViewSet(viewsets.ModelViewSet):
         return Response(data)
 
     @action(detail=True, methods=['post'])
-    def trigger(self, request):
-        ...
+    def trigger(self, request, pk):
+        try:
+            trigger = Trigger.objects.get(pk=pk)
+        except Trigger.DoesNotExist:
+            raise NotFound(f"No Trigger exists with id={pk}")
+        trigger.execute(payload=request.data)
+        return Response({"status": "ok"})
