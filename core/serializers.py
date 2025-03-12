@@ -5,8 +5,6 @@ from core.models import EventLog, Trigger
 
 
 class EventLogSerializer(serializers.HyperlinkedModelSerializer):
-    trigger_name = serializers.SerializerMethodField()
-    triggered_via = serializers.SerializerMethodField()
 
     class Meta:
         model = EventLog
@@ -17,13 +15,6 @@ class EventLogSerializer(serializers.HyperlinkedModelSerializer):
             'trigger_name',
             'triggered_via',
         ]
-
-    def get_trigger_name(self, data):
-        if data.trigger:
-            return data.trigger.name
-
-    def get_triggered_via(self, data):
-        return data.trigger.type
 
 
 class TriggerListSerializer(serializers.HyperlinkedModelSerializer):

@@ -17,14 +17,18 @@ class Trigger(models.Model):
         # determine whether this needs to run in the same
         # thread, or go via the queueing system.
         EventLog.objects.create(
+            is_test=is_test,
+            payload=payload,
             trigger=self,
             triggered_at=timezone.now(),
-            is_test=is_test,
-            payload=payload
+            triggered_via=self.type,
+            trigger_name=self.name,
         )
 
 
 class EventLog(models.Model):
+    is_test = models.BooleanField(default=False)
+    payload = models.JSONField(null=True)
     trigger = models.ForeignKey(
         Trigger,
         null=True,
@@ -32,5 +36,5 @@ class EventLog(models.Model):
         on_delete=models.SET_NULL  # TODO: Maybe, move to a ghost trigger?
     )
     triggered_at = models.DateTimeField(auto_now_add=True)
-    is_test = models.BooleanField(default=False)
-    payload = models.JSONField(null=True)
+    trigger_name = models.CharField(max_length=128)
+    triggered_via = models.CharField(max_length=16, choices=TriggerType.choices)
