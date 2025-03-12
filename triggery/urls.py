@@ -23,7 +23,7 @@ from core.views import EventLogViewSet, TriggerViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'triggers', TriggerViewSet, basename='triggers')
+router.register(r'triggers', TriggerViewSet, basename='trigger')
 router.register(r'events', EventLogViewSet)
 
 

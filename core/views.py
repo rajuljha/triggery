@@ -30,9 +30,11 @@ class TriggerViewSet(viewsets.ModelViewSet):
             name=request.data.get("name"),
             type=TriggerType.API,
         )
-        trigger_url = self.reverse_action(self.trigger.url_name, args=[trigger.id])
-        data = {"trigger_url": trigger_url}
-        return Response(data)
+        return Response(
+            TriggerListSerializer(
+                trigger, context={"request": request}
+            ).data
+        )
 
     @action(detail=True, methods=['post'])
     def trigger(self, request, pk):

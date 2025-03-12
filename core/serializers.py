@@ -28,14 +28,16 @@ class TriggerListSerializer(serializers.HyperlinkedModelSerializer):
             "name",
             "trigger_url",
             "type",
+            "url",
         ]
 
     def get_trigger_url(self, data):
         return reverse(
-            "triggers-trigger",
+            "trigger-trigger",
             args=[data.id],
             request=self.context.get('request'),
         )
+
 
 class TriggerSerializer(serializers.ModelSerializer):
 
