@@ -2,8 +2,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from core.schedule import schedule_one_off
-
 
 class TriggerType(models.TextChoices):
     API = "API"
@@ -39,11 +37,19 @@ class Trigger(models.Model):
 
 
 class APITrigger(Trigger):
-    payload = models.JSONField()
+    schema = models.JSONField(null=False)
 
 
 class OneTimeTrigger(Trigger):
     scheduled_at = models.DateTimeField(null=False)
+
+
+class RecurringTrigger(Trigger):
+    cron_expression = models.CharField(
+        max_length=128,
+        null=False,
+        help_text="Cron format: minute hour day month day_of_week (optional: year)",
+    )
 
 
 class EventLog(models.Model):

@@ -3,7 +3,7 @@ from datetime import timedelta
 from celery import shared_task
 from django.utils import timezone
 
-from core.models import EventLog, OneTimeTrigger
+from core.models import EventLog, OneTimeTrigger, RecurringTrigger
 
 
 def exec_trigger(trigger, *args, **kwargs):
@@ -18,6 +18,17 @@ def trigger_one_off(trigger_id):
     try:
         trigger = OneTimeTrigger.objects.get(id=trigger_id)
     except OneTimeTrigger.DoesNotExist:
+        print(f"No such trigger id exists: {trigger_id}")
+        return
+
+    exec_trigger(trigger)
+
+
+@shared_task
+def trigger_recurring(trigger_id):
+    try:
+        trigger = RecurringTrigger.objects.get(id=trigger_id)
+    except RecurringTrigger.DoesNotExist:
         print(f"No such trigger id exists: {trigger_id}")
         return
 

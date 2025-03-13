@@ -1,15 +1,19 @@
+import jsonschema
+from django_filters import rest_framework as filters
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
-from core.models import APITrigger, EventLog, OneTimeTrigger
-from core.schedule import schedule_one_off
+from core.filters import EventLogFilter
+from core.models import APITrigger, EventLog, OneTimeTrigger, RecurringTrigger
+from core.schedule import schedule_one_off, schedule_recurring
 from core.serializers import (
     APITriggerReadSerializer,
     APITriggerSerializer,
     EventLogSerializer,
     OneTimeTriggerSerializer,
+    RecurringTriggerSerializer,
 )
 from core.tasks import exec_trigger
 
@@ -18,6 +22,8 @@ class EventLogViewSet(viewsets.ModelViewSet):
     queryset = EventLog.objects.all().order_by("-id")
     serializer_class = EventLogSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = EventLogFilter
     http_method_names = ["get"]
 
 
@@ -46,6 +52,8 @@ class APITriggerViewSet(viewsets.ModelViewSet):
             raise NotFound(f"No Trigger exists with id={pk}")
 
         if request.method == "POST":
+            serializer = APITriggerSerializer(instance=trigger, data=request.data)
+            serializer.is_valid(raise_exception=True)
             exec_trigger(trigger, payload=request.data.get("payload"))
             return Response({"status": "ok"})
 
@@ -67,4 +75,19 @@ class OneTimeTriggerViewSet(viewsets.ModelViewSet):
         trigger = serializer.save()
 
         schedule_one_off(trigger)
+        return Response(serializer.data)
+
+
+class RecurringTriggerViewSet(viewsets.ModelViewSet):
+    queryset = RecurringTrigger.objects.filter(is_test=False).order_by("-id")
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RecurringTriggerSerializer
+
+    def create(self, request):
+        serializer = RecurringTriggerSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        trigger = serializer.save()
+        schedule_recurring(trigger)
         return Response(serializer.data)

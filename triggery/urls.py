@@ -18,12 +18,18 @@ Including another URLconf
 from django.urls import include, path
 from rest_framework import routers
 
-from core.views import APITriggerViewSet, EventLogViewSet, OneTimeTriggerViewSet
+from core.views import (
+    APITriggerViewSet,
+    EventLogViewSet,
+    OneTimeTriggerViewSet,
+    RecurringTriggerViewSet,
+)
 
 router = routers.DefaultRouter()
 router.register(r"api_triggers", APITriggerViewSet, basename="apitrigger")
 router.register(r"events", EventLogViewSet)
 router.register(r"one_time_triggers", OneTimeTriggerViewSet)
+router.register(r"recurring_triggers", RecurringTriggerViewSet)
 
 
 urlpatterns = [
