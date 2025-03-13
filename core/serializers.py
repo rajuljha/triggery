@@ -9,11 +9,14 @@ class EventLogSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventLog
         fields = [
+            'id',
+            'is_archived',
             'is_test',
             'payload',
             'triggered_at',
             'trigger_name',
             'triggered_via',
+            'url',
         ]
 
 

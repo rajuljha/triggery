@@ -47,6 +47,7 @@ class OneTimeTrigger(Trigger):
 
 
 class EventLog(models.Model):
+    is_archived = models.BooleanField(default=False)
     is_test = models.BooleanField(default=False)
     payload = models.JSONField(null=True)
     content_type = models.ForeignKey(ContentType, null=True, blank=True, on_delete=models.SET_NULL)
