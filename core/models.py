@@ -1,5 +1,8 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.utils import timezone
+
+from core.schedule import schedule_one_off
 
 
 class TriggerType(models.TextChoices):
@@ -8,33 +11,47 @@ class TriggerType(models.TextChoices):
 
 
 class Trigger(models.Model):
-    name = models.CharField(max_length=128)
-    type = models.CharField(max_length=16, choices=TriggerType.choices)
-    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        abstract = True
 
-    def execute(self, payload=None, is_test=False):
+    name = models.CharField(max_length=128)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_test = models.BooleanField(default=False)
+
+    def execute(self, payload=None):
         # TODO: Introduce `run_async` as an argument to
         # determine whether this needs to run in the same
         # thread, or go via the queueing system.
+        if isinstance(self, APITrigger):
+            triggered_via = TriggerType.API
+            if payload is None:
+                raise ValueError("'payload' cannot be None")
+        else:
+            triggered_via = TriggerType.SCHEDULED
+
         EventLog.objects.create(
-            is_test=is_test,
+            is_test=self.is_test,
             payload=payload,
             trigger=self,
-            triggered_at=timezone.now(),
-            triggered_via=self.type,
+            triggered_via=triggered_via,
             trigger_name=self.name,
         )
+
+
+class APITrigger(Trigger):
+    payload = models.JSONField()
+
+
+class OneTimeTrigger(Trigger):
+    scheduled_at = models.DateTimeField(null=False)
 
 
 class EventLog(models.Model):
     is_test = models.BooleanField(default=False)
     payload = models.JSONField(null=True)
-    trigger = models.ForeignKey(
-        Trigger,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL  # TODO: Maybe, move to a ghost trigger?
-    )
+    content_type = models.ForeignKey(ContentType, null=True, blank=True, on_delete=models.SET_NULL)
+    object_id = models.PositiveIntegerField()
+    trigger = GenericForeignKey("content_type", "object_id")
     triggered_at = models.DateTimeField(auto_now_add=True)
     trigger_name = models.CharField(max_length=128)
     triggered_via = models.CharField(max_length=16, choices=TriggerType.choices)

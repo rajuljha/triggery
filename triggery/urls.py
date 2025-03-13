@@ -15,19 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from core.views import EventLogViewSet, TriggerViewSet
+from core.views import APITriggerViewSet, EventLogViewSet, OneTimeTriggerViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'triggers', TriggerViewSet, basename='trigger')
+router.register(r'api_triggers', APITriggerViewSet, basename='apitrigger')
 router.register(r'events', EventLogViewSet)
+router.register(r'one_time_triggers', OneTimeTriggerViewSet)
 
 
 urlpatterns = [
     path("", include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
