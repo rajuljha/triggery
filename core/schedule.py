@@ -13,7 +13,11 @@ def schedule_one_off(trigger):
         name=f"run {trigger.name} {uuid.uuid4()}",
         task="core.tasks.trigger_one_off",
         one_off=True,
-        args=json.dumps([trigger.id,]),
+        args=json.dumps(
+            [
+                trigger.id,
+            ]
+        ),
     )
 
 
@@ -21,11 +25,14 @@ def schedule_one_off(trigger):
 
 
 def execute():
-    from core.schedule import schedule_one_off
     from core.models import OneTimeTrigger
+    from core.schedule import schedule_one_off
+
     tg = OneTimeTrigger.objects.first()
     from datetime import timedelta
+
     from django.utils import timezone
+
     tg.scheduled_at = timezone.now() + timedelta(seconds=10)
     schedule_one_off(tg)
     print(tg.scheduled_at)

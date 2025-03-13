@@ -4,25 +4,25 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from core.models import APITrigger, EventLog, OneTimeTrigger
+from core.schedule import schedule_one_off
 from core.serializers import (
     APITriggerReadSerializer,
     APITriggerSerializer,
     EventLogSerializer,
     OneTimeTriggerSerializer,
 )
-from core.schedule import schedule_one_off
 from core.tasks import exec_trigger
 
 
 class EventLogViewSet(viewsets.ModelViewSet):
-    queryset = EventLog.objects.all().order_by('-id')
+    queryset = EventLog.objects.all().order_by("-id")
     serializer_class = EventLogSerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ["get"]
 
 
 class APITriggerViewSet(viewsets.ModelViewSet):
-    queryset = APITrigger.objects.filter(is_test=False).order_by('-id')
+    queryset = APITrigger.objects.filter(is_test=False).order_by("-id")
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
@@ -32,14 +32,13 @@ class APITriggerViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         serializer = APITriggerReadSerializer(
-            data=request.data,
-            context={"request": request}
+            data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-    @action(detail=True, methods=['get', 'post'])
+    @action(detail=True, methods=["get", "post"])
     def trigger(self, request, pk):
         try:
             trigger = APITrigger.objects.get(pk=pk)
@@ -51,22 +50,19 @@ class APITriggerViewSet(viewsets.ModelViewSet):
             return Response({"status": "ok"})
 
         return Response(
-            APITriggerReadSerializer(
-                trigger, context={"request": request}
-            ).data
+            APITriggerReadSerializer(trigger, context={"request": request}).data
         )
 
 
 class OneTimeTriggerViewSet(viewsets.ModelViewSet):
-    queryset = OneTimeTrigger.objects.filter(is_test=False).order_by('-id')
+    queryset = OneTimeTrigger.objects.filter(is_test=False).order_by("-id")
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = OneTimeTriggerSerializer
 
     def create(self, request):
         serializer = OneTimeTriggerSerializer(
-            data=request.data,
-            context={"request": request}
-            )
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
         trigger = serializer.save()
 

@@ -2,7 +2,8 @@ from datetime import timedelta
 
 from celery import shared_task
 from django.utils import timezone
-from core.models import OneTimeTrigger, EventLog
+
+from core.models import EventLog, OneTimeTrigger
 
 
 def exec_trigger(trigger, *args, **kwargs):

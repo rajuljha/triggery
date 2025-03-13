@@ -5,18 +5,17 @@ from core.models import APITrigger, EventLog, OneTimeTrigger
 
 
 class EventLogSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = EventLog
         fields = [
-            'id',
-            'is_archived',
-            'is_test',
-            'payload',
-            'triggered_at',
-            'trigger_name',
-            'triggered_via',
-            'url',
+            "id",
+            "is_archived",
+            "is_test",
+            "payload",
+            "triggered_at",
+            "trigger_name",
+            "triggered_via",
+            "url",
         ]
 
 
@@ -40,7 +39,7 @@ class APITriggerReadSerializer(serializers.HyperlinkedModelSerializer):
         return reverse(
             "apitrigger-trigger",
             args=[data.id],
-            request=self.context.get('request'),
+            request=self.context.get("request"),
         )
 
 
@@ -52,7 +51,7 @@ class APITriggerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = APITrigger
-        fields = ['payload']
+        fields = ["payload"]
 
 
 class OneTimeTriggerSerializer(serializers.ModelSerializer):
