@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
+from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework.response import Response
 
 from core.filters import EventLogFilter
@@ -16,6 +17,20 @@ from core.serializers import (
     RecurringTriggerSerializer,
 )
 from core.tasks import exec_trigger
+
+
+class RawInputRenderer(BrowsableAPIRenderer):
+    """
+    Custom renderer which overrides the standard DRF Browsable API
+    to disable the "HTML" tab.
+    """
+
+    def get_context(self, *args, **kwargs):
+        context = super(RawInputRenderer, self).get_context(*args, **kwargs)
+
+        context["post_form"] = None
+        context["put_form"] = None
+        return context
 
 
 class EventLogViewSet(viewsets.ModelViewSet):
@@ -35,6 +50,11 @@ class APITriggerViewSet(viewsets.ModelViewSet):
         if self.action == "trigger" and self.request.method == "POST":
             return APITriggerSerializer
         return APITriggerReadSerializer
+
+    def get_renderers(self):
+        if self.action == "trigger":
+            return [RawInputRenderer()]
+        return super(APITriggerViewSet, self).get_renderers()
 
     def create(self, request):
         serializer = APITriggerReadSerializer(
