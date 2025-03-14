@@ -5,6 +5,12 @@ databases:
     user: triggery
 
 services:
+  - type: redis
+    name: celery-redis
+    plan: free
+    maxmemoryPolicy: noeviction # recommended policy for queues
+    ipAllowList: [] # only allow internal connections
+
   - type: web
     plan: free
     name: triggery-backend
@@ -20,3 +26,41 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
+
+  - type: worker
+    name: celery-worker
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A triggery worker -l INFO --concurrency 4"
+    autoDeploy: false
+    envVars:
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: triggerydb
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+
+  - type: worker
+    name: celery-beat
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A triggery beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    autoDeploy: false
+    envVars:
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: triggerydb
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
