@@ -6,8 +6,10 @@ services:
     container_name: migrate
     command: python manage.py migrate
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     env_file:
       - .env
     ports:
@@ -19,7 +21,7 @@ services:
     command: gunicorn triggery.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_started
       migrate:
@@ -39,6 +41,12 @@ services:
       - .env
     ports:
       - "54320:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
 
   redis:
     image: redis:alpine
@@ -53,7 +61,7 @@ services:
     command: celery -A triggery worker -l INFO
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_started
       migrate:
@@ -67,7 +75,7 @@ services:
     command: celery -A triggery beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_started
       migrate:
