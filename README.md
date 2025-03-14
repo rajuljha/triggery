@@ -23,6 +23,8 @@ For a live demo, please see https://triggery-backend.onrender.com (credentials h
   - Real-time event logging to track all executed triggers.
   - Automatic archiving after 2 hours and final deletion after 48 hours, ensuring efficient data retention.
   - Comprehensive event metadata for tracking trigger sources, execution times, and API payloads.
+  - Filter test logs (quickly, database indexes ensure that page loads are fast)
+  - Ability to request archived logs
 
 ## Setup
 
