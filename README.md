@@ -1,5 +1,5 @@
 # Triggery
-> Jingle bells, jingle bells, trigger it all away!
+> 🔔  Jingle bells, jingle bells, trigger it all away! 🏹
 
 ---
 
@@ -36,11 +36,11 @@ We will use `docker-compose` to orchestrate everything.
 
 
 ```sh
- git clone https://github.com/rajuljha/triggery.git
- cd triggery
-  # Ensure docker-daemon is running
- docker start (or run the docker desktop application in the background)
- docker-compose up -d
+git clone https://github.com/rajuljha/triggery.git
+cd triggery
+# Ensure docker-daemon is running
+docker start (or run the docker desktop application in the background)
+docker-compose up -d
 ```
 
 Create a superuser to be able to log in to the UI:
