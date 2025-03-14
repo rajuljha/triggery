@@ -41,10 +41,6 @@ mv .env.sample .env
 docker-compose up -d
 ```
 
-> [!WARNING]
-> If the migrate job fails because of a connection error with the database: `django.db.utils.OperationalError: connection to server at "db" (172.19.0.2), port 5432 failed: Connection refused`, **retry the same command after 30 seconds** or so. This happens because the database might not be ready to accept connections yet (a proper solution here is to implement a healthcheck, and only start the migrate job once postgres becomes healthy).
-> 
-
 If all goes well, the app should be live at http://localhost:8000.
 
 A one-time step is to create a user to be able to log in to the UI:
