@@ -33,8 +33,6 @@ RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-os.getenv("ALLOWED_HOSTS").split(",")
-
 
 # Application definition
 
