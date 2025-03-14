@@ -38,8 +38,7 @@ We will use `docker-compose` to orchestrate everything.
 ```sh
 git clone https://github.com/rajuljha/triggery.git
 cd triggery
-# Ensure docker-daemon is running
-docker start (or run the docker desktop application in the background)
+mv .env.sample .env
 docker-compose up -d
 ```
 
