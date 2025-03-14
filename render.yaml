@@ -1,6 +1,6 @@
 databases:
   - name: triggerydb
-    plan: starter
+    plan: free
     databaseName: triggerydb
     user: triggery
 
