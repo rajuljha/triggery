@@ -37,7 +37,7 @@ services:
     name: celery-worker-with-beat
     runtime: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "celery -A triggery worker -l INFO --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    startCommand: "celery -A triggery worker -l INFO --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --concurrency 1"
     autoDeploy: false
     envVars:
       - key: CELERY_BROKER_URL
