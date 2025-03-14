@@ -48,4 +48,4 @@ services:
         fromService:
           name: triggery-backend
           type: web
-          envVarKey: MINIO_ROOT_PASSWORD
+          envVarKey: DJANGO_SECRET_KEY
