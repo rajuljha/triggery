@@ -22,6 +22,11 @@ services:
         fromDatabase:
           name: triggerydb
           property: connectionString
+      - key: CELERY_BROKER
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
