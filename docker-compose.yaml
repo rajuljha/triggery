@@ -38,14 +38,14 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "54320:5432"
 
   redis:
     image: redis:alpine
     container_name: redis_broker
     restart: always
     ports:
-      - "6379:6379"
+      - "63790:6379"
 
   celery_worker:
     build: .
