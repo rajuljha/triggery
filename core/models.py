@@ -48,7 +48,7 @@ class RecurringTrigger(Trigger):
     cron_expression = models.CharField(
         max_length=128,
         null=False,
-        help_text="Cron format: minute hour day month day_of_week (optional: year)",
+        help_text="Cron format: */5 * * * * (Please look at: https://crontab.guru for generating Cron Expressions.)",
     )
 
 
