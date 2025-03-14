@@ -34,10 +34,33 @@ services:
 
   - type: worker
     plan: starter
-    name: celery-worker-with-beat
+    name: celery-worker
     runtime: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "celery -A triggery worker -l INFO --concurrency 4 --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    startCommand: "celery -A triggery worker -l INFO"
+    autoDeploy: false
+    envVars:
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: triggerydb
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        fromService:
+          name: triggery-backend
+          type: web
+          envVarKey: DJANGO_SECRET_KEY
+
+- type: worker
+    plan: starter
+    name: celery-beat
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A triggery beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     autoDeploy: false
     envVars:
       - key: CELERY_BROKER_URL
