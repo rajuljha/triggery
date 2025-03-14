@@ -31,7 +31,7 @@ For a live demo, please see https://triggery-backend.onrender.com (credentials h
 We will use `docker-compose` to orchestrate everything.
 
 > [!NOTE]
-> Before starting, please ensure ports 5432, 6379 and 8000 are open. On a mac, you can use `lsof -i :5432` for a quick check.
+> Before starting, please ensure port 8000 is open. You can use `lsof -i :8000` for a quick check.
 
 
 ```sh
