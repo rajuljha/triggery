@@ -55,7 +55,7 @@ services:
           type: web
           envVarKey: DJANGO_SECRET_KEY
 
-- type: worker
+  - type: worker
     plan: starter
     name: celery-beat
     runtime: python
