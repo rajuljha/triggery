@@ -28,6 +28,7 @@ services:
         value: 4
 
   - type: worker
+    plan: free
     name: celery-worker
     runtime: python
     buildCommand: "pip install -r requirements.txt"
@@ -47,6 +48,7 @@ services:
         generateValue: true
 
   - type: worker
+    plan: free
     name: celery-beat
     runtime: python
     buildCommand: "pip install -r requirements.txt"
