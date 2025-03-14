@@ -31,8 +31,7 @@ For a live demo, please see https://triggery-backend.onrender.com (credentials h
 We will use `docker-compose` to orchestrate everything.
 
 > [!NOTE]
-> Before starting, please ensure ports 5432, 6379 and 8000 are open.
-> On a mac, you can use `lsof -i :5432` for a quick check.
+> Before starting, please ensure ports 5432, 6379 and 8000 are open. On a mac, you can use `lsof -i :5432` for a quick check.
 
 
 ```sh
@@ -42,10 +41,16 @@ mv .env.sample .env
 docker-compose up -d
 ```
 
-Create a superuser to be able to log in to the UI:
+> [!WARNING]
+> If the migrate job fails because of a connection error with the database: `django.db.utils.OperationalError: connection to server at "db" (172.19.0.2), port 5432 failed: Connection refused`, **retry the same command after 30 seconds** or so. This happens because the database might not be ready to accept connections yet (a proper solution here is to implement a healthcheck, and only start the migrate job once postgres becomes healthy).
+> 
+
+If all goes well, the app should be live at http://localhost:8000.
+
+A one-time step is to create a user to be able to log in to the UI:
 
 ```sh
- docker-compose exec web 'python manage.py createsuperuser'
+docker-compose exec web python manage.py createsuperuser
 ```
 
 ## APIs
