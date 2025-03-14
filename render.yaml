@@ -1,18 +1,18 @@
 databases:
   - name: triggerydb
-    plan: free
+    plan: starter
     databaseName: triggerydb
     user: triggery
 
 services:
   - type: redis
     name: celery-redis
-    plan: free
+    plan: starter
     maxmemoryPolicy: noeviction # recommended policy for queues
     ipAllowList: [] # only allow internal connections
 
   - type: web
-    plan: free
+    plan: starter
     name: triggery-backend
     runtime: python
     buildCommand: "./build.sh"
@@ -28,7 +28,7 @@ services:
         value: 4
 
   - type: worker
-    plan: free
+    plan: starter
     name: celery-worker-with-beat
     runtime: python
     buildCommand: "pip install -r requirements.txt"
