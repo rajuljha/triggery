@@ -49,6 +49,15 @@ A one-time step is to create a user to be able to log in to the UI:
 docker-compose exec web python manage.py createsuperuser
 ```
 
+### Authentication
+Triggery uses Basic Authentication, that is in the HTTP request, the Authorization Header should contain the following 
+information in order to authenticate the user.
+```yaml
+Authorization: username>:<password>
+```
+> [!NOTE]
+> The authorization credentials sent are the unencrypted base64 encoded version of `<username>:<password>`
+
 ## APIs
 
 Please read through for a quick demo on how to create, test and edit triggers, alongwith viewing the events generated.
