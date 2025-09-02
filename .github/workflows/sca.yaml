@@ -55,10 +55,7 @@ jobs:
         uses: fossology/fossology-action@v1
         with:
           scan_mode: "scan-only-deps"
-          scanners: |
-            - nomos
-            - ojo
-            - copyright
+          scanners: "nomos ojo copyright"
           report_format: "SPDX_JSON"
           sbom_path: "sbom.json"
 

@@ -14,8 +14,6 @@ jobs:
       id: compliance
       uses: fossology/fossology-action@v1
       with:
-        scan_mode: ''
-        scanners: |
-            - copyright
-            - keyword
-        report_format: 'SPDX_JSON'
+        scan_mode: ""
+        scanners: "copyright keyword"
+        report_format: "SPDX_JSON"
