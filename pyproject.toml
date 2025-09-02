@@ -1,7 +1,7 @@
 [project]
 name = "triggery"
 version = "0.1.0"
-description = "A trigger management platform"
+description = "A trigger management platform for everyone"
 authors = [
     {name = "rajuljha",email = "rajuljha49@gmail.com"}
 ]
