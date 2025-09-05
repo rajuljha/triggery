@@ -19,7 +19,7 @@ jobs:
 
     - name: License check on tagging a new version
       id: compliance
-      uses: fossology/fossology-action@v1
+      uses: rajuljha/fossology-action@v1
       with:
         scan_mode: "differential"
         scanners: "ojo keyword"

@@ -12,7 +12,7 @@ jobs:
 
     - name: License check
       id: compliance
-      uses: fossology/fossology-action@v1
+      uses: rajuljha/fossology-action@v1
       with:
         scan_mode: ""
         scanners: "nomos ojo"
