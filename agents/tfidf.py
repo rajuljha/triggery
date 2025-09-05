@@ -65,7 +65,7 @@ class TFIDF(AtarashiAgent):
         """
         TF-IDF Sum Score Algorithm. Used TfidfVectorizer to implement it.
 
-        :param inputFile: Input file path
+        :param inputFile: Input file path for vectorizer
         :return: Sorted array of JSON of scanner results with sim_type as __tfidfsumscore
         """
         processedData1 = super().loadFile(inputFile)
