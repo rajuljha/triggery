@@ -1,6 +1,9 @@
 name: License scan on tags
 
-on: [tags]
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   compliance_check:
