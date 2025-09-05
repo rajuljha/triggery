@@ -1,3 +1,6 @@
+"""
+Copyright 2025 Rajul Jha <rajuljha49@gmail.com>
+"""
 import os
 
 from dotenv import load_dotenv
