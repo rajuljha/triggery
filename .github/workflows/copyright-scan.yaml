@@ -12,8 +12,15 @@ jobs:
 
     - name: Copyright check using FOSSOps
       id: compliance
-      uses: rajuljha/fossology-action@v1
+      uses: fossology/fossology-action@v1
       with:
         scan_mode: ""
         scanners: "copyright keyword"
         report_format: "SPDX_JSON"
+
+    - name: Upload Scan Results Artifact
+      if: success() || failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fossology scan results
+        path: results/

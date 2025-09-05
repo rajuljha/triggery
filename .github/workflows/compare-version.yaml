@@ -19,10 +19,17 @@ jobs:
 
     - name: License check on tagging a new version
       id: compliance
-      uses: rajuljha/fossology-action@v1
+      uses: fossology/fossology-action@v1
       with:
         scan_mode: "differential"
         scanners: "ojo keyword"
         from_tag: "v1.0.0"
         to_tag: ${{ steps.current_tag.outputs.tag }}
         report_format: "SPDX_JSON"
+
+    - name: Upload Scan Results Artifact
+      if: success() || failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fossology scan results
+        path: results/

@@ -52,7 +52,7 @@ jobs:
 
       - name: Run FOSSology analysis
         id: fossology
-        uses: rajuljha/fossology-action@v1
+        uses: fossology/fossology-action@v1
         with:
           scan_mode: "scan-only-deps"
           scanners: "nomos ojo copyright"
