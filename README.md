@@ -5,7 +5,6 @@
 
 For a live demo, please see https://triggery-backend.onrender.com (credentials have been shared via email)
 
-
 > [!IMPORTANT]
 > [Render](https://render.com) — the cloud service we use for deployment — spins down a free web service that goes 15 minutes without receiving inbound traffic, and spins it back up whenever a request is received. It causes a noticeable delay for the first few requests until the service is back up and running, and the browser page may hang in the meantime. Kindly give it a couple of minutes.
 
